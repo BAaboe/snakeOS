@@ -1,0 +1,38 @@
+[
+  {
+    "arguments": [
+      "/home/benja/opt/cross/bin/i686-elf-gcc",
+      "-c",
+      "-ffreestanding",
+      "-fno-stack-protector",
+      "-I",
+      "include/",
+      "-m32",
+      "build/kernel_entry.o",
+      "-o",
+      "build/kernel.o",
+      "kernel/main.c"
+    ],
+    "directory": "/home/benja/Documents/dev/assembly/calculator",
+    "file": "/home/benja/Documents/dev/assembly/calculator/kernel/main.c",
+    "output": "/home/benja/Documents/dev/assembly/calculator/build/kernel.o"
+  },
+  {
+    "arguments": [
+      "/home/benja/opt/cross/bin/i686-elf-gcc",
+      "-c",
+      "-ffreestanding",
+      "-fno-stack-protector",
+      "-I",
+      "include/",
+      "-m32",
+      "build/kernel_entry.o",
+      "-o",
+      "build/kernel.o",
+      "kernel/drivers/vga.c"
+    ],
+    "directory": "/home/benja/Documents/dev/assembly/calculator",
+    "file": "/home/benja/Documents/dev/assembly/calculator/kernel/drivers/vga.c",
+    "output": "/home/benja/Documents/dev/assembly/calculator/build/kernel.o"
+  }
+]

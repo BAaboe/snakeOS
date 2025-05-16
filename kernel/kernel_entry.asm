@@ -1,7 +1,7 @@
 [BITS 32]
 
 [global kernel]
-[extern main]
+[extern kernel_main]
 
 kernel:
 ; Setting up the segments
@@ -13,6 +13,6 @@ mov gs, ax
 mov ss, ax
 mov esp, 0x105000
 
-call main
+call kernel_main
 
 hlt

@@ -32,6 +32,11 @@ mov ah, 0x0e
 add al, '0'
 int 0x10
 
+; Set video mode
+mov ah, 0x00
+mov al, 0x13
+int 0x10
+
 ; Load the GDT
 mov ax, 0
 mov ds, ax
