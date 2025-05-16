@@ -19,7 +19,7 @@ mov ax, 0
 mov es, ax
 
 mov ah, 0x02 ; read sectors
-mov al, 2 ; count
+mov al, 0x20 ; count
 mov ch, 0 ; cylinder
 mov dh, 0 ; head
 mov cl, 2 ; sector

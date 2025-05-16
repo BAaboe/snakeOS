@@ -1,4 +1,5 @@
 #include "drivers/vga.h"
+#include "printing.h"
 
 
 static void make_board(){
@@ -15,8 +16,5 @@ static void make_board(){
 }
 
 void kernel_main(){
-	//clear_screen();
 	make_board();
-	//vga_fill_rect(0, 0, 10, 10, 0x07);
-	//vga_fill_rect(10, 0, 10, 10, 0x17);
 }

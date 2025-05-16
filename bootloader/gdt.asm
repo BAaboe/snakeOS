@@ -46,7 +46,7 @@ gdtr:
 load_gdt:
 ; Set the size
 xor ax, ax
-mov eax, gdt_end
+mov eax, gdt_end+1
 sub eax, gdt
 mov [gdtr], ax
 

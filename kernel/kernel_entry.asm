@@ -3,6 +3,10 @@
 [global kernel]
 [extern kernel_main]
 
+jmp kernel
+
+%include "kernel/idt.asm"
+
 kernel:
 ; Setting up the segments
 mov ax, 0x10
@@ -12,6 +16,8 @@ mov fs, ax
 mov gs, ax
 mov ss, ax
 mov esp, 0x105000
+
+call load_idt
 
 call kernel_main
 

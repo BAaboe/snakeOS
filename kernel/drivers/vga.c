@@ -1,4 +1,7 @@
+#include <stddef.h>
+
 #include "drivers/vga.h"
+#include "font.h"
 
 
 void vga_fill_rect(unsigned char* where, unsigned char w, unsigned char h, unsigned char c){
@@ -10,11 +13,11 @@ void vga_fill_rect(unsigned char* where, unsigned char w, unsigned char h, unsig
 	}
 }
 
-void vga_clear_screen(){
+void vga_fill_screen(unsigned char color){
 	unsigned char* vram = (unsigned char*)VRAM;
 	for (int y=0; y<HEIGHT; y++){
 		for (int x=0; x<WIDTH; x++){
-			vram[PITCH*y + x] = 0x00;
+			vram[PITCH*y + x] = color;
 		}
 	}
 }

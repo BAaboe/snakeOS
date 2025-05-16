@@ -12,6 +12,6 @@
 
 void vga_fill_rect(unsigned char* where, unsigned char w, unsigned char h, unsigned char c);
 
-void vga_clear_screen();
+void vga_fill_screen(unsigned char color);
 
 #endif // !VGA_H
