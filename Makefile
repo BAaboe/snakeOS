@@ -1,7 +1,7 @@
 CC := ~/opt/cross/bin/i686-elf-gcc
 CCFLAGS := -ffreestanding -nostdlib -nostartfiles -fno-stack-protector -I include/ -m32 -T kernel/kernel.ld
 
-CFILES := kernel/main.c kernel/drivers/vga.c kernel/printing.c
+CFILES := kernel/main.c kernel/drivers/vga.c kernel/printing.c kernel/error.c
 
 all: bootloader
 	nasm -f bin bootloader/mbr.asm -o build/bootloader.o

@@ -18,3 +18,7 @@ static void make_board(){
 void kernel_main(){
 	make_board();
 }
+
+void handle_pic(){
+	putstring(0, 0, "PIC", 0x0a);
+}
