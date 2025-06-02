@@ -1,3 +1,4 @@
+section .data
 idt:
 times 256 dq 0
 idt_end:
@@ -7,8 +8,8 @@ idtr:
 	dd 0
 	
 
-extern handle_pic
 
+section .text
 load_idt:
 call populate_idt
 
@@ -69,7 +70,7 @@ set_interupt_handler idt+(8*20), 0xe, handle_exception
 set_interupt_handler idt+(8*21), 0xe, handle_exception
 
 ; pic 1
-set_interupt_handler idt+(8*32), 0x0e, handle_pic1
+set_interupt_handler idt+(8*32), 0x0e, handle_irq0
 set_interupt_handler idt+(8*33), 0x0e, handle_pic1
 set_interupt_handler idt+(8*34), 0x0e, handle_pic1
 set_interupt_handler idt+(8*35), 0x0e, handle_pic1
@@ -144,6 +145,18 @@ call df
 popa
 iret
 
+
+extern time_tick
+handle_irq0:
+pusha
+
+call time_tick
+
+popa
+
+jmp eoi1
+
+extern handle_pic
 handle_pic1:
 pusha
 
@@ -152,11 +165,16 @@ call handle_pic
 popa
 
 mov al, 0x20
-out 0x20, al ;EOI
+out 0x20, al
 iret
 
 handle_pic2:
+jmp eoi2
+
+eoi2:
 mov al, 0x20
-out 0x20, al ;EOI
-out 0xA0, al ;EOI
+out 0xA0, al
+eoi1:
+mov al, 0x20
+out 0x20, al
 iret

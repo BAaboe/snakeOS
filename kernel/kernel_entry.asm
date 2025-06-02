@@ -7,6 +7,7 @@ jmp kernel
 
 %include "kernel/idt.asm"
 
+section .text
 init_pic:
 ; Pic 1
 mov al, 0x11
