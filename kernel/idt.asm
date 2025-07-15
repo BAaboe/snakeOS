@@ -63,15 +63,15 @@ set_interupt_handler idt+(8*12), 0xe, handle_ss
 set_interupt_handler idt+(8*13), 0xe, handle_exception
 set_interupt_handler idt+(8*14), 0xe, handle_exception
 set_interupt_handler idt+(8*16), 0xe, handle_exception
-set_interupt_handler idt+(8*17), 0xe, handle_exception
+set_interupt_handler idt+(8*17), 0xe, handle_ac
 set_interupt_handler idt+(8*18), 0xe, handle_exception
 set_interupt_handler idt+(8*19), 0xe, handle_exception
 set_interupt_handler idt+(8*20), 0xe, handle_exception
-set_interupt_handler idt+(8*21), 0xe, handle_exception
+set_interupt_handler idt+(8*21), 0xe, handle_cp
 
 ; pic 1
 set_interupt_handler idt+(8*32), 0x0e, handle_irq0
-set_interupt_handler idt+(8*33), 0x0e, handle_pic1
+set_interupt_handler idt+(8*33), 0x0e, handle_irq1
 set_interupt_handler idt+(8*34), 0x0e, handle_pic1
 set_interupt_handler idt+(8*35), 0x0e, handle_pic1
 set_interupt_handler idt+(8*36), 0x0e, handle_pic1
@@ -145,12 +145,39 @@ call df
 popa
 iret
 
+extern ac
+handle_ac:
+pusha
+
+call ac
+
+popa
+iret
+
+extern cp
+handle_cp:
+pusha
+
+call cp
+
+popa
+iret
 
 extern time_tick
 handle_irq0:
 pusha
 
 call time_tick
+
+popa
+
+jmp eoi1
+
+extern handle_keyboad_interupt
+handle_irq1:
+pusha
+
+call handle_keyboad_interupt
 
 popa
 

@@ -16,6 +16,14 @@ void df(){
 	putstring(0, 0, "Double Fault", 0x28);
 }
 
+void ac(){
+	putstring(0, 0, "Alignment Check", 0x28);
+}
+
+void cp(){
+	putstring(0, 0, "Control Protection Exeception", 0x28);
+}
+
 void other_error(){
 	putstring(0, 0, "Other error", 0x28);
 }
