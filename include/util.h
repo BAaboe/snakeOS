@@ -1,5 +1,7 @@
 #include <stdint.h>
 
+int rand(void);
+void srand(unsigned int seed);
 
 // copied from https://wiki.osdev.org/Inline_Assembly/Examples#I.2FO_access
 static inline void outb(uint16_t port, uint8_t val) {
