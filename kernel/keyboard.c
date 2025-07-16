@@ -29,10 +29,10 @@ void handle_keyboad_interupt(){
 			extended_byte = 1;
 		} else {
 			if (scan_code >= 0x81){
-				latest_key_release.extended_byte = 1;
+				latest_key_release.extended_byte = 0;
 				latest_key_release.scan_code = scan_code;
 			} else {
-				latest_key_press.extended_byte = 1;
+				latest_key_press.extended_byte = 0;
 				latest_key_press.scan_code = scan_code;
 			}
 

@@ -13,3 +13,8 @@ int get_tick(){
 float get_time(){
 	return tick*MS_PER_TICK;
 }
+
+void wait(int ms) {
+	int time = get_time();
+	while(get_time()-time < ms);
+}

@@ -3,6 +3,7 @@
 #include "time.h"
 #include "util.h"
 #include "keyboard.h"
+#include "drivers/pc_speaker.h"
 #include <stdint.h>
 
 #define BOX_SIZE 10
@@ -57,13 +58,10 @@ static void make_board(){
 	}
 }
 
-
-
-void kernel_main(){
+uint16_t game_loop(snake_part* apple, snake_part* parts) {
 	srand(get_time());
 	direction_t direction = RIGHT;
 
-	snake_part parts[MAX_NUM_PARTS+1];
 	for(int i = 0; i < MAX_NUM_PARTS+1; i++){
 		snake_part part = {0, 0};
 		parts[i] = part;
@@ -71,7 +69,8 @@ void kernel_main(){
 
 	int num_parts = 1;
 
-	snake_part apple = {(rand()%(WIDTH/BOX_SIZE))*BOX_SIZE, (rand()%(HEIGHT/BOX_SIZE))*BOX_SIZE};
+	apple->x = (rand()%(WIDTH/BOX_SIZE))*BOX_SIZE;
+	apple->y = (rand()%(HEIGHT/BOX_SIZE))*BOX_SIZE;
 
 	make_board();
 
@@ -113,10 +112,11 @@ void kernel_main(){
 			}
 
 			// Colision detection
-			if(parts[0].x == apple.x && parts[0].y == apple.y) {
+			if(parts[0].x == apple->x && parts[0].y == apple->y) {
+				beep();
 				num_parts++;
-				apple.x = (rand()%(WIDTH/BOX_SIZE))*BOX_SIZE;
-				apple.y = (rand()%(HEIGHT/BOX_SIZE))*BOX_SIZE;
+				apple->x = (rand()%(WIDTH/BOX_SIZE))*BOX_SIZE;
+				apple->y = (rand()%(HEIGHT/BOX_SIZE))*BOX_SIZE;
 			}
 
 			for(int i = 1; i<num_parts; i++){
@@ -136,7 +136,7 @@ void kernel_main(){
 			uint8_t* where = (uint8_t*)(VRAM) + parts[0].y*PITCH + parts[0].x;
 			vga_fill_rect(where, BOX_SIZE, BOX_SIZE, 0x0a);
 
-			where = (uint8_t*)(VRAM) + apple.y*PITCH + apple.x;
+			where = (uint8_t*)(VRAM) + apple->y*PITCH + apple->x;
 			vga_fill_rect(where, BOX_SIZE, BOX_SIZE, 0x28);
 
 			int score = num_parts-1;
@@ -153,17 +153,38 @@ void kernel_main(){
 			putstring(WIDTH/2 - 40, 0, str_score, 0x0a);
 			
 		}
-
 	}
+
+	return num_parts-1;
+}
+
+void death_music() {
+	play_sound(392);
+	wait(20);
+	stop_sound();
+	wait(50);
+	play_sound(392);
+	wait(20);
+	stop_sound();
+	wait(50);
+	play_sound(392);
+	wait(20);
+	stop_sound();
+	wait(50);
+	play_sound(311);
+	wait(500);
+	stop_sound();
+}
+
+void death(uint16_t score, snake_part* apple, snake_part* parts){
 	make_board();
 
-	for(int i = num_parts-1; i > 0; i--){
+	for(int i = score; i > 0; i--){
 		uint8_t* where = (uint8_t*)(VRAM) + parts[i].y*PITCH + parts[i].x;
 		vga_fill_rect(where, BOX_SIZE, BOX_SIZE, 0x0a);
 	}
 
-	putstring(WIDTH/2-36, HEIGHT/2-4, "GAME OVER", 0x28);
-	int score = num_parts-1;
+	putstring(WIDTH/2-36, HEIGHT/4, "GAME OVER", 0x28);
 	char* str_score = "Score: 000";
 
 	str_score[7] = score/100 + '0';
@@ -174,7 +195,45 @@ void kernel_main(){
 
 	str_score[9] = score + '0';
 	
-	putstring(WIDTH/2 - 40, HEIGHT/2+6, str_score, 0x0a);
+	putstring(WIDTH/2 - 40, HEIGHT/3, str_score, 0x0a);
+	
+	death_music();
+
+
+	while (1) {
+		Latest_Key_Change* key_change = get_latest_key_change();
+		if (!key_change->pressed->extended_byte && key_change->pressed->scan_code == 0x1C) {
+			beep();
+			return;
+		}
+	}
+}
+
+void start_screen() {
+	make_board();
+	putstring(WIDTH/2 - 20, HEIGHT/4, "SNAKE", 0x0a);
+	putstring(WIDTH/2 - 80, HEIGHT/3 , "PRESS ENTER TO START", 0x0a);
+	while (1) {
+		Latest_Key_Change* key_change = get_latest_key_change();
+		if (!key_change->pressed->extended_byte && key_change->pressed->scan_code == 0x1C) {
+			beep();
+			return;
+		}
+	}
+}
+
+
+void kernel_main(){
+	snake_part parts[MAX_NUM_PARTS+1];
+	snake_part apple;
+	start_screen();
+	while (1) {
+		
+
+		uint16_t score = game_loop(&apple, parts);
+
+		death(score, &apple, parts);
+	}
 }
 
 

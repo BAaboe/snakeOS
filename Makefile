@@ -1,7 +1,7 @@
 CC := ~/opt/cross/bin/i686-elf-gcc
 CCFLAGS := -ffreestanding -nostdlib -nostartfiles -fno-stack-protector -I include/ -m32 -T kernel/kernel.ld
 
-CFILES := kernel/main.c kernel/drivers/vga.c kernel/printing.c kernel/error.c kernel/time.c kernel/keyboard.c kernel/util.c
+CFILES := kernel/main.c kernel/drivers/vga.c kernel/printing.c kernel/error.c kernel/time.c kernel/keyboard.c kernel/util.c kernel/drivers/pc_speaker.c
 
 all: bootloader
 	nasm -f bin bootloader/mbr.asm -o build/bootloader.o
@@ -15,7 +15,7 @@ all: bootloader
 	dd if=build/kernel.bin of=build/bilde.img bs=512 seek=1
 
 run: all
-	qemu-system-x86_64 -drive file=build/bilde.img,format=raw
+	qemu-system-x86_64 -drive file=build/bilde.img,format=raw -audiodev pa,id=speaker -machine pcspk-audiodev=speaker
 
 clean:
 	rm -rf build/*
