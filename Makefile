@@ -15,7 +15,7 @@ all: bootloader
 	dd if=build/kernel.bin of=build/bilde.img bs=512 seek=1 conv=notrunc
 
 run: all
-	qemu-system-x86_64 -drive file=build/bilde.img,if=floppy,format=raw -audiodev pa,id=speaker -machine pcspk-audiodev=speaker
+	qemu-system-x86_64 -drive file=build/bilde.img,if=floppy,format=raw
 
 clean:
 	rm -rf build/*

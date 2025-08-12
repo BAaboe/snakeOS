@@ -79,6 +79,10 @@ uint16_t game_loop(snake_part* apple, snake_part* parts) {
 	uint8_t lost = 0;
 
 	while(!lost){
+		// Latest_Key_Change* latest_key_change = get_latest_key_change();
+		// puthexb(0, 0, latest_key_change->last_scan_code->scan_code, 0x0e);
+		// puthexb(0, 10, latest_key_change->pressed->scan_code, 0x0e);
+		// puthexb(0, 20, latest_key_change->released->scan_code, 0x0e);
 		float ntime = get_time();
 		if(ntime-time > 250){
 			time = ntime;
@@ -224,12 +228,11 @@ void start_screen() {
 
 
 void kernel_main(){
+	init_keybord();
 	snake_part parts[MAX_NUM_PARTS+1];
 	snake_part apple;
 	start_screen();
 	while (1) {
-		
-
 		uint16_t score = game_loop(&apple, parts);
 
 		death(score, &apple, parts);

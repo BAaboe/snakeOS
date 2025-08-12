@@ -6,12 +6,25 @@
 
 static Scan_Code latest_key_press = {0, 0};
 static Scan_Code latest_key_release = {0, 0};
+static Scan_Code latest_key_press_or_release = {0, 0};
 
-static Latest_Key_Change latest_key_change = {&latest_key_press, &latest_key_release};
+static Latest_Key_Change latest_key_change = {&latest_key_press, &latest_key_release, &latest_key_press_or_release};
 
 static uint8_t extended_byte = 0;
 
-
+void init_keybord() {
+	uint8_t status;
+	while(1){
+		outb(0x60, 0xF0);
+		io_wait();
+		outb(0x60, 2);
+		io_wait();
+		status = inb(0x60);
+		if(status != 0xfe) break;
+	}
+	status = inb(0x60);
+	puthexb(0, 0, status, 0x0e);
+}
 void handle_keyboad_interupt(){
 	uint8_t scan_code = inb(0x60);
 
@@ -19,9 +32,11 @@ void handle_keyboad_interupt(){
 		if (scan_code >= 0xB0){
 			latest_key_release.extended_byte = 1;
 			latest_key_release.scan_code = scan_code;
+			latest_key_press_or_release = latest_key_release;
 		} else {
 			latest_key_press.extended_byte = 1;
 			latest_key_press.scan_code = scan_code;
+			latest_key_press_or_release = latest_key_press;
 		}
 		extended_byte = 0;
 	} else {
@@ -31,11 +46,19 @@ void handle_keyboad_interupt(){
 			if (scan_code >= 0x81){
 				latest_key_release.extended_byte = 0;
 				latest_key_release.scan_code = scan_code;
+				latest_key_press_or_release = latest_key_release;
 			} else {
 				latest_key_press.extended_byte = 0;
 				latest_key_press.scan_code = scan_code;
+				latest_key_press_or_release = latest_key_press;
 			}
 
+		}
+
+		// Real Hardware
+
+		if (extended_byte) {
+			
 		}
 	}
 
